@@ -14,6 +14,15 @@ never rewritten.
 > one.
 
 
+## 0.1.22 - The Google tag stays off the newsletter confirmation page, whose URL carries the subscriber's token
+
+0.1.21 put the tag in the layout every public page shares, including `newsletter.status`, which
+`/newsletter/confirmar/{token}` renders. The tag reports the full URL of each page to Google, so the confirmation
+token would have been sent along with it. `partials/google-tag.blade.php` now renders nothing on the
+`newsletter.confirm` route; the rest of the public pages keep the tag. `GoogleTagTest` gains two cases: the
+confirmation page carries no tag (it fails without the exclusion) and the newsletter form page still does.
+0.1.21 should not be deployed on its own.
+
 ## 0.1.21 - The public pages load the Google tag, so the Google Analytics property G-GMMV9KTTFJ receives hits
 
 New `partials/google-tag.blade.php`, included at the end of the public layout's `<head>` beside the Matomo snippet:

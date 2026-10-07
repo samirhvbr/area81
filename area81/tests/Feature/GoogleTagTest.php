@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Services\NewsletterService;
 use Tests\TestCase;
 
 /**
@@ -49,5 +50,21 @@ class GoogleTagTest extends TestCase
         config(['services.google.tag_id' => self::ID]);
 
         $this->get('/admin/login')->assertOk()->assertDontSee('googletagmanager.com', false);
+    }
+
+    /** The confirmation link carries a token in its URL, and the tag reports the whole URL to Google. */
+    public function test_the_newsletter_confirmation_page_does_not_carry_the_tag(): void
+    {
+        config(['services.google.tag_id' => self::ID]);
+        $this->mock(NewsletterService::class, fn ($mock) => $mock->shouldReceive('confirm')->once()->with('a-secret-token')->andReturn('invalid'));
+
+        $this->get('/newsletter/confirmar/a-secret-token')->assertOk()->assertDontSee('googletagmanager.com', false);
+    }
+
+    public function test_the_other_newsletter_pages_still_carry_the_tag(): void
+    {
+        config(['services.google.tag_id' => self::ID]);
+
+        $this->get('/newsletter')->assertOk()->assertSee('googletagmanager.com/gtag/js?id='.self::ID, false);
     }
 }
