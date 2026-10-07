@@ -14,6 +14,17 @@ never rewritten.
 > one.
 
 
+## 0.1.21 - The public pages load the Google tag, so the Google Analytics property G-GMMV9KTTFJ receives hits
+
+New `partials/google-tag.blade.php`, included at the end of the public layout's `<head>` beside the Matomo snippet:
+the stock gtag.js loader and `gtag('config', ...)` call, async. The admin layout and the admin login view do not
+include it. The measurement id comes from `services.google.tag_id` (`GOOGLE_TAG_ID`), defaulting to `G-GMMV9KTTFJ`
+("area81.com.br – GA4", web stream https://area81.com.br, UTC−3) so a deploy ships the tag without touching the
+server's `.env`; an empty value turns it off, which `.env.example` and `phpunit.xml` do, so local copies and the
+suite send no hits. A server `.env` that sets `GOOGLE_TAG_ID` explicitly keeps its own value. `GoogleTagTest` pins
+the single load per page, the id, the head placement, the off switch and the admin login exclusion. The site has no
+privacy page and no cookie notice while the tag sets Google Analytics cookies: an open item, not decided here.
+
 ## 0.1.20 - the permission lists follow repodocs: five commands move to ask, seven rules leave deny
 
 `rm -rf` and `curl`/`wget` piped into a shell leave `deny` and now ask for confirmation.

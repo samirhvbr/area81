@@ -54,4 +54,14 @@ return [
         'cookie_domain' => env('MATOMO_COOKIE_DOMAIN'),
     ],
 
+    // Google tag (gtag.js), Google Analytics 4. The snippet
+    // (resources/views/partials/google-tag.blade.php) is injected into the public
+    // <head> only when 'tag_id' is non-empty; GOOGLE_TAG_ID= (empty) turns it off.
+    // The default is the production measurement id ("area81.com.br – GA4"), so a
+    // deploy ships the tag without touching the server's .env. It is public in the
+    // page source, not a secret.
+    'google' => [
+        'tag_id' => env('GOOGLE_TAG_ID', 'G-GMMV9KTTFJ'),
+    ],
+
 ];
